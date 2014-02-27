@@ -2,6 +2,8 @@ package org.nailedtothex.it;
 
 import static org.junit.Assert.*;
 
+import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -16,7 +18,14 @@ public class HigeTestIT {
 
 	@Before
 	public void before() throws Exception {
-		context = new InitialContext();
+		Properties props = new Properties();
+
+		String port = System.getProperty("wildfly.remote.port");
+		if(port != null){
+			props.setProperty("remote.connection.default.port", port);			
+		}
+		
+		context = new InitialContext(props);
 		instance = (Hige) context.lookup("ejb:/it//HigeImpl!org.nailedtothex.it.Hige");
 	}
 
